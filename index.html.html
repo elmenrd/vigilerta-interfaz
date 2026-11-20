@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vigilerta | Panel de seguridad</title>
+
+  <style>
+    :root {
+      --navy: #142b4a;
+      --blue: #245b91;
+      --bg: #f3f6fa;
+      --line: #e4e9f0;
+      --muted: #667085;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font: 15px Arial, sans-serif;
+      background: var(--bg);
+      color: #1d2939;
+    }
+
+    /* Encabezado */
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 20px 26px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .brand small {
+      display: block;
+      font-size: 12px;
+      font-weight: normal;
+      margin-top: 5px;
+    }
+
+    /* Estructura principal y menú lateral */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: calc(100vh - 70px);
+    }
+
+    aside {
+      background: white;
+      padding: 18px;
+      border-right: 1px solid var(--line);
+    }
+
+    nav a {
+      display: block;
+      padding: 12px;
+      margin: 4px 0;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #344054;
+    }
+
+    nav a.active,
+    nav a:hover {
+      background: #eaf1f8;
+      color: var(--navy);
+      font-weight: bold;
+    }
+
+    /* Contenido y páginas */
+    main {
+      padding: 28px;
+      max-width: 1300px;
+      width: 100%;
+      margin: auto;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    h2 {
+      font-size: 18px;
+    }
+
+    .sub,
+    .muted {
+      color: var(--muted);
+    }
+
+    .sub {
+      margin-bottom: 22px;
+    }
+
+    /* Tarjetas, métricas y estados */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .metric {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #edf2f7;
+      font-size: 12px;
+    }
+
+    .ok {
+      background: #e8f6ef;
+      color: #16865b;
+    }
+
+    .warn {
+      background: #fff4df;
+      color: #a56b12;
+    }
+
+    .danger {
+      background: #fdecec;
+      color: #bd3434;
+    }
+
+    /* Tablas, botones, zonas y notas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      background: #edf2f7;
+    }
+
+    button {
+      background: var(--blue);
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 13px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #eaf1f8;
+      color: var(--navy);
+    }
+
+    .zones {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .note {
+      background: #edf4fb;
+      border-left: 4px solid var(--blue);
+      padding: 13px;
+      margin-top: 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* Diseño adaptable (Responsive) */
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        display: flex;
+        overflow: auto;
+      }
+
+      nav a {
+        white-space: nowrap;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 550px) {
+      header {
+        display: block;
+      }
+
+      .grid,
+      .zones {
+        grid-template-columns: 1fr;
+      }
+
+      main {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Encabezado superior -->
+  <header>
+    <div class="brand">
+      VIGILERTA
+      <small>Sistema Integral de Seguridad y Monitoreo Residencial</small>
+      <small>Angel Casilla | Edwing Alejandro</small>
+    </div>
+    <span>● Prototipo demostrativo</span>
+  </header>
+
+  <div class="layout">
+    <!-- Menú lateral -->
+    <aside>
+      <nav>
+        <a href="#inicio" data-page="inicio" class="active">▦ Resumen</a>
+        <a href="#residencias" data-page="residencias">⌂ Residencias</a>
+        <a href="#zonas" data-page="zonas">▤ Zonas y dispositivos</a>
+        <a href="#sensores" data-page="sensores">◉ Sensores y lecturas</a>
+        <a href="#alertas" data-page="alertas">⚑ Alertas</a>
+        <a href="#historial" data-page="historial">◷ Historial</a>
+        <a href="#configuracion" data-page="configuracion">⚙ Configuración</a>
+      </nav>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main>
+      <!-- Sección: Panel general -->
+      <section id="inicio" class="page active">
+        <h1>Panel general</h1>
+        <p class="sub">Resumen del estado de seguridad de la residencia.</p>
+
+        <div class="grid">
+          <div class="card">
+            <span class="muted">Residencias</span>
+            <div class="metric">1</div>
+            <span class="pill ok">Activa</span>
+          </div>
+
+          <div class="card">
+            <span class="muted">Dispositivos conectados</span>
+            <div class="metric">4 / 5</div>
+            <span class="pill warn">1 desconectado</span>
+          </div>
+
+          <div class="card">
+            <span class="muted">Sensores activos</span>
+            <div class="metric">8</div>
+            <span class="pill ok">Funcionando</span>
+          </div>
+
+          <div class="card">
+            <span class="muted">Alertas pendientes</span>
+            <div class="metric" id="count">2</div>
+            <span class="pill danger">Revisar</span>
+          </div>
+        </div>
+
+        <h2>Eventos recientes</h2>
+        <table>
+          <tr>
+            <th>Evento</th>
+            <th>Zona</th>
+            <th>Hora</th>
+            <th>Estado</th>
+          </tr>
+          <tr>
+            <td>Movimiento detectado</td>
+            <td>Puerta frontal</td>
+            <td>10:42 a. m.</td>
+            <td>Activa</td>
+          </tr>
+          <tr>
+            <td>Lectura elevada de gas</td>
+            <td>Cocina</td>
+            <td>10:18 a. m.</td>
+            <td>En revisión</td>
+          </tr>
+        </table>
+
+        <div class="note">
+          Los datos son ejemplos para mostrar el diseño. La interfaz todavía no está conectada a sensores ni a VigilertaDB.
+        </div>
+      </section>
+
+      <!-- Sección: Residencias -->
+      <section id="residencias" class="page">
+        <h1>Residencias</h1>
+        <p class="sub">Consulta las viviendas registradas y su estado de seguridad.</p>
+
+        <div class="card">
+          <h2>Casa Principal</h2>
+          <p>4 zonas configuradas · 5 dispositivos registrados</p>
+          <span id="armed" class="pill ok">Armado total</span>
+          <p>
+            <button onclick="toggleArm()">Cambiar estado de armado</button>
+          </p>
+        </div>
+
+        <p class="note">
+          En la versión conectada se podrán registrar viviendas, asignar usuarios y definir permisos.
+        </p>
+      </section>
+
+      <!-- Sección: Zonas y dispositivos -->
+      <section id="zonas" class="page">
+        <h1>Zonas y dispositivos</h1>
+        <p class="sub">Áreas vigiladas y equipos instalados en cada espacio.</p>
+
+        <div class="zones">
+          <div class="card">
+            <h2>Puerta frontal</h2>
+            <span class="pill ok">En línea</span>
+            <p>Nodo ESP32 · Reed y PIR</p>
+          </div>
+
+          <div class="card">
+            <h2>Cocina</h2>
+            <span class="pill ok">En línea</span>
+            <p>Nodo ESP32 · Sensor MQ-2</p>
+          </div>
+
+          <div class="card">
+            <h2>Sala</h2>
+            <span class="pill ok">En línea</span>
+            <p>Nodo ESP32 · PIR HC-SR501</p>
+          </div>
+
+          <div class="card">
+            <h2>Garaje</h2>
+            <span class="pill warn">Desconectado</span>
+            <p>Nodo ESP32 · Reed</p>
+          </div>
+
+          <div class="card">
+            <h2>Patio</h2>
+            <span class="pill ok">En línea</span>
+            <p>Cámara IP · Video por configurar</p>
+          </div>
+        </div>
+
+        <p class="note">
+          Cada zona agrupa los sensores y dispositivos instalados. El sistema final recibirá su estado mediante MQTT.
+        </p>
+      </section>
+
+      <!-- Sección: Sensores y lecturas -->
+      <section id="sensores" class="page">
+        <h1>Sensores y lecturas</h1>
+        <p class="sub">Consulta el tipo de sensor, su ubicación y la última lectura.</p>
+
+        <table>
+          <tr>
+            <th>Sensor</th>
+            <th>Tipo</th>
+            <th>Zona</th>
+            <th>Lectura de ejemplo</th>
+            <th>Estado</th>
+          </tr>
+          <tr>
+            <td>SEN-001</td>
+            <td>PIR HC-SR501</td>
+            <td>Sala</td>
+            <td>Sin movimiento</td>
+            <td>Activo</td>
+          </tr>
+          <tr>
+            <td>SEN-002</td>
+            <td>MQ-2</td>
+            <td>Cocina</td>
+            <td>180 PPM</td>
+            <td>Normal</td>
+          </tr>
+          <tr>
+            <td>SEN-003</td>
+            <td>Reed</td>
+            <td>Puerta frontal</td>
+            <td>Cerrado</td>
+            <td>Activo</td>
+          </tr>
+        </table>
+
+        <p class="note">
+          Las lecturas reales llegarán desde los ESP32 por MQTT/JSON y se almacenarán en la tabla Lecturas de VigilertaDB.
+        </p>
+      </section>
+
+      <!-- Sección: Alertas -->
+      <section id="alertas" class="page">
+        <h1>Centro de alertas</h1>
+        <p class="sub">Eventos que necesitan atención del residente o administrador.</p>
+
+        <table id="alerts">
+          <tr>
+            <th>Alerta</th>
+            <th>Tipo</th>
+            <th>Severidad</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+          <tr>
+            <td>Movimiento en puerta frontal</td>
+            <td>Intrusión</td>
+            <td>Crítica</td>
+            <td class="state">Activa</td>
+            <td><button onclick="resolve(this)">Marcar atendida</button></td>
+          </tr>
+          <tr>
+            <td>Lectura elevada en cocina</td>
+            <td>Gas / humo</td>
+            <td>Advertencia</td>
+            <td class="state">En revisión</td>
+            <td><button onclick="resolve(this)">Marcar atendida</button></td>
+          </tr>
+        </table>
+
+        <p class="note">
+          El usuario podrá revisar cada evento y marcarlo como atendido. La acción se guardará en la tabla Alertas.
+        </p>
+      </section>
+
+      <!-- Sección: Historial -->
+      <section id="historial" class="page">
+        <h1>Historial de eventos</h1>
+        <p class="sub">Consulta lecturas, cambios de estado y alertas anteriores.</p>
+
+        <div class="card">
+          <label>
+            Filtrar por fecha:
+            <input type="date">
+          </label>
+          <button onclick="alert('El filtro se conectará a las consultas de VigilertaDB.')">Consultar</button>
+        </div>
+
+        <p class="note">
+          Esta pantalla permitirá revisar incidentes anteriores y consultar registros históricos por fecha.
+        </p>
+      </section>
+
+      <!-- Sección: Configuración -->
+      <section id="configuracion" class="page">
+        <h1>Configuración</h1>
+        <p class="sub">Administración de usuarios, sensores y preferencias.</p>
+
+        <div class="card">
+          <h2>Opciones previstas</h2>
+          <ul>
+            <li>Administrar usuarios y roles.</li>
+            <li>Configurar umbrales del sensor MQ-2.</li>
+            <li>Activar o desactivar notificaciones.</li>
+            <li>Registrar dispositivos y tópicos MQTT.</li>
+            <li>Actualizar información de la residencia.</li>
+          </ul>
+        </div>
+
+        <p class="note">
+          Las opciones disponibles dependerán del rol del usuario y se guardarán en la base de datos.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <!-- Lógica de navegación e interacción -->
+  <script>
+    function page(id) {
+      document.querySelectorAll('.page').forEach(section => {
+        section.classList.toggle('active', section.id === id);
+      });
+
+      document.querySelectorAll('nav a').forEach(link => {
+        link.classList.toggle('active', link.dataset.page === id);
+      });
+    }
+
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        const targetPage = link.dataset.page;
+        page(targetPage);
+        location.hash = targetPage;
+      });
+    });
+
+    function toggleArm() {
+      const statusBadge = document.getElementById('armed');
+      const isArmed = statusBadge.textContent === 'Armado total';
+
+      statusBadge.textContent = isArmed ? 'Desarmado' : 'Armado total';
+      statusBadge.className = 'pill ' + (isArmed ? 'warn' : 'ok');
+    }
+
+    function resolve(button) {
+      const row = button.closest('tr');
+      row.querySelector('.state').textContent = 'Atendida';
+
+      button.textContent = 'Atendida';
+      button.disabled = true;
+
+      const countElement = document.getElementById('count');
+      const currentCount = Number(countElement.textContent);
+      countElement.textContent = Math.max(0, currentCount - 1);
+    }
+
+    if (location.hash) {
+      const initialPage = location.hash.slice(1);
+      if (document.getElementById(initialPage)) {
+        page(initialPage);
+      }
+    }
+  </script>
+</body>
+
+</html>
